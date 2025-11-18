@@ -11,11 +11,22 @@ class hanoi:
 
     # define function to check if a move is allowed
     def check_move_legal(self, move_code):
+        index_old_bar = str(move_code)[:1]
+        index_moving_ring = str(move_code)[1:]
 
+        # 1. check if smaller ring is above old position of moving ring
+        bool_check_1 =
+
+        # 2. check if smaller ring is below new position on moving ring
+        bool_check_2 =
+
+        bool_legal = bool_check_1 and bool_check2
         return bool_legal
 
     # define function to execute a move
     def move(self, action_code):
+        old_state = self.state
+
         return state_code_new, reward, done
 
     # define function to check whether a game has been won
