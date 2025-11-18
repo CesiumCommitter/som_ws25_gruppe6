@@ -24,3 +24,4 @@ class hanoi:
     # define function to reset game state (after a game has ended)
     def reset_state(self):
         return new_state
+"""Testkommentar"""
