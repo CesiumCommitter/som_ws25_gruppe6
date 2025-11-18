@@ -47,7 +47,7 @@ class HanoiGame:
             lines.append("  ".join(row))
         lines.append(base)
         label_width = tower_width + 2
-        lines.append("  ".join([label.center(label_width) for label in ["A", "B", "C"]]))
+        lines.append("  ".join([label.center(label_width) for label in ["1", "2", "3"]]))
         lines.append(f"Züge: {self.move_count}")
         return "\n".join(lines)
 
@@ -55,7 +55,7 @@ class HanoiGame:
 
 # Beispielverwendung:
 if __name__ == "__main__":
-    game = HanoiGame(num_disks=6)
+    game = HanoiGame(num_disks=5)
     print(game)
     game.move(0, 2)
     game.move(0, 1)
