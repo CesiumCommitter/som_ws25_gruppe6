@@ -3,6 +3,8 @@ from hanoi import hanoi
 class hanoi_ai(hanoi):
     # define subclass constructor
     def __init__(self):
+        # define parent class constructor
+        super().__init__()
         self.som_pi_brain =
 
     # define function to fetch upcoming move from ai model
