@@ -26,34 +26,36 @@ class HanoiGame:
         return len(self.towers[2]) == self.num_disks
 
     def __str__(self):
-        """ASCII-Darstellung des Spielfelds."""
+        """ASCII-Darstellung des Spielfelds mit begrenzenden Stäben."""
         lines = []
         height = self.num_disks
-        tower_width = self.num_disks * 2 + 1
-        base = "=" * (tower_width * 3 + 6)
+        tower_width = self.num_disks  # Anzahl der Zeichen für Ringspalte (ohne Stäbe)
+        base = "=" * ((tower_width + 2) * 3 + 4)  # +2 für "|" links+rechts je Turm, +4 für Abstände
 
         for level in range(height - 1, -1, -1):
             row = []
             for tower in self.towers:
                 if len(tower) > level:
                     disk_size = tower[level]
-                    disk = "X" * (disk_size * 2 - 1)
                     padding = " " * (self.num_disks - disk_size)
-                    row.append(padding + disk + padding)
+                    disk = "X" * disk_size
+                    # Ring im Format | <padding><disk> |
+                    row.append(f"|{padding}{disk}|")
                 else:
-                    row.append(" " * self.num_disks + "|" + " " * self.num_disks)
+                    # leer mit Stäben: |<spaces>|
+                    row.append(f"|{' ' * tower_width}|")
             lines.append("  ".join(row))
         lines.append(base)
-        lines.append("  ".join(["  A".center(tower_width),
-                                "  B".center(tower_width),
-                                "  C".center(tower_width)]))
+        label_width = tower_width + 2
+        lines.append("  ".join([label.center(label_width) for label in ["1", "2", "3"]]))
         lines.append(f"Züge: {self.move_count}")
         return "\n".join(lines)
 
 
+
 # Beispielverwendung:
 if __name__ == "__main__":
-    game = HanoiGame(num_disks=4)
+    game = HanoiGame(num_disks=5)
     print(game)
     game.move(0, 2)
     game.move(0, 1)
