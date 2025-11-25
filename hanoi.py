@@ -11,19 +11,30 @@ class hanoi:
 
     # define function to check if a move is allowed
     def check_move_legal(self, move_code):
-        index_new_bar = int(str(move_code)[:1])
-        index_moving_ring = int(str(move_code)[1:])
+        index_new_bar = str(move_code)[0]
+        index_old_bar = str(move_code)[1]
 
-        # 1. check if smaller ring is above old position of moving ring
-        for i in range(0, index_moving_ring):
-            index_bar_old_ith_ring = int(str(self.state)[i])
-        bool_check_1 =
+        rings = [int(d) for d in str(self.state)]
+        old_ring_index = None
+        new_ring_index = None
 
-        # 2. check if smaller ring is below new position on moving ring
-        bool_check_2 =
+        for i in range(len(rings)):     
+            if rings[i] == index_old_bar:
+                old_ring_index = i
+                break
 
-        bool_legal = bool_check_1 and bool_check_2
-        return bool_legal
+        if old_ring_index is None:
+            return False
+        
+        for i in range(len(rings)):
+            if rings[i] == index_new_bar:
+                new_ring_index = i
+                break
+
+        if old_ring_index is None:
+            return True    
+          
+        return old_ring_index < new_ring_index
 
     # define function to execute a move
     def move(self, action_code):
