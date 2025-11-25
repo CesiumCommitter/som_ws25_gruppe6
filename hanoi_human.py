@@ -6,10 +6,10 @@ class hanoi_human(hanoi):
     def input_move(self):
 
         try:
-            player_ = input("Please input move from bar _ to bar _ (z.B. '1 3'): ")
+            player_input = input("Please input move from bar _ to bar _ (z.B. '1 3'): ")
 
             # convert input to list of int's
-            indexes = list(map(int, input.split()))
+            indexes = list(map(int, player_input.split()))
 
             if len(indexes) != 2:
                 print("Error: Wrong amount of indexes")
