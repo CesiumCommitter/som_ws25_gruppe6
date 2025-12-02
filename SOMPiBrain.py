@@ -11,7 +11,7 @@ class SOMPiBrain(object):
         self.gamma = gamma
         self.epsilon = epsilon
         self.q_table = np.zeros([state_num, action_num])
-        self.action_num=action_num
+        self.action_num = action_num
         
     # Get the best or a random action for the current state     
     def get_action(self, state, explore=True):    

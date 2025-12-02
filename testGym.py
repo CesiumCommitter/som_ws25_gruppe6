@@ -6,8 +6,8 @@ print("Training started.\n")
 # Hide the output in the console with 'ansi' (bug)
 env = gymnasium.make("Taxi-v3", render_mode="ansi").env
 # State- and Action-Space
-state_num=env.observation_space.n
-action_num=env.action_space.n
+state_num = env.observation_space.n
+action_num = env.action_space.n
 # Initialize the AI-class
 brain=SOMPiBrain.SOMPiBrain(state_num,action_num)
 
@@ -19,9 +19,9 @@ for i in range(1, 100001):
     done = False
     
     while not done:
-        action=brain.get_action(state)
+        action = brain.get_action(state)
         next_state, reward, done, newparameter, info = env.step(action) 
-        state=brain.reward_action( state, next_state, action,reward)
+        state = brain.reward_action(state, next_state, action, reward)
         
         epochs += 1
     if i % 10000 == 0:
