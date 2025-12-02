@@ -7,7 +7,52 @@ class hanoi:
 
     # define function to return ascii art when class instance is printed
     def __str__(self):
-        return ascii_art
+        rings = [int(d) for d in str(self.state)]
+        n = self.ring_count
+
+        # Turm-Datenstruktur: jede Liste = Ringe von oben nach unten
+        towers = {1: [], 2: [], 3: []}
+
+        # Ringe einsortieren: größte zuerst nach unten
+        # Ringe einsortieren: Ring 1 = kleinste Scheibe
+        for ring in range(1, n + 1):
+            tower_index = rings[ring - 1]            # Ziffer sagt: auf welchem Turm steht Ring X?
+            towers[tower_index].append(ring)         # Ringgröße = seine Nummer
+
+
+        # Maximale Scheibenbreite = größte Scheibe
+        tower_width = n
+
+        lines = []
+
+        # Zeichne Reihen von oben nach unten
+        for level in range(n):
+            row_parts = []
+            for t in (1, 2, 3):
+                tower = towers[t]
+                # Berechne ob auf dieser Ebene eine Scheibe ist
+                ring_idx = level - (n - len(tower))
+                if 0 <= ring_idx < len(tower):
+                    size = tower[ring_idx]
+                    disk = "X" * size
+                    padding = " " * (tower_width - size)
+                    row_parts.append(f"|{padding}{disk}|")
+                else:
+                    row_parts.append(f"|{' ' * tower_width}|")
+            lines.append("  ".join(row_parts))
+
+        # Basislinie
+        base = "=" * ((tower_width + 2) * 3 + 4)
+        lines.append(base)
+
+        # Turmnummern
+        label_width = tower_width + 2
+        labels = "  ".join([str(i).center(label_width) for i in (1, 2, 3)])
+        lines.append(labels)
+
+        lines.append(f"Züge: {self.move_count}")
+
+        return "\n".join(lines)
 
     # define function to check if a move is allowed
     def check_move_legal(self, move_code):
