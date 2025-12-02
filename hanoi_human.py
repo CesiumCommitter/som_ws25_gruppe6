@@ -22,7 +22,9 @@ class hanoi_human(hanoi):
             if bar_old == bar_new:
                 print("Error: Bars may not be identical")
 
-            return bar_old, bar_new
+            move_code = int("".join(map(str, (bar_old, bar_new))))
+
+            return move_code
 
         except ValueError:
             print("Error: Invalid Input. Please input two bar indexes divided by a whitespace")
