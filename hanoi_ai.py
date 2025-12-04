@@ -18,10 +18,6 @@ class hanoi_ai(hanoi):
         move_code = self.brain.get_action(brain_state)
         return move_code
 
-    # define function to set exploration rate for ai model
-    def set_exploration_rate(self, rate):
-        return None
-
     def map_state_to_brain_state(self, state):
         state_space_str = [''.join(str(turm) for turm in komb) for komb in product([1, 2, 3], repeat=self.ring_count)]
         state_space = list(map(int, state_space_str))
