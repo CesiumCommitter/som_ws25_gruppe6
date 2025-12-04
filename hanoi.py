@@ -2,6 +2,7 @@ class hanoi:
     # define class constructor
     def __init__(self, ring_count):
         self.move_count = 0
+        self.forbidden_move_count = 0
         self.ring_count = ring_count
         self.state = int('1' * ring_count) # ring count has to be greater than 3
 
@@ -114,4 +115,5 @@ class hanoi:
     def reset_state(self):
         self.state = int('1' * self.ring_count)
         self.move_count = 0
+        self.forbidden_move_count = 0
         return None

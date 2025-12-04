@@ -1,6 +1,5 @@
 from hanoi import hanoi
-import gymnasium
-import SOMPiBrain
+from SOMPiBrain import SOMPiBrain
 from itertools import product
 
 class hanoi_ai(hanoi):
@@ -9,14 +8,14 @@ class hanoi_ai(hanoi):
     def __init__(self, ring_count):
         # define parent class constructor
         super().__init__(ring_count)
-        state_num = 3^ring_count
+        state_num = pow(3,ring_count)
         action_num = 6
-        self.som_pi_brain = SOMPiBrain.SOMPiBrain(state_num, action_num)
+        self.brain = SOMPiBrain(state_num, action_num)
 
     # define function to fetch upcoming move from ai model
     def fetch_move(self):
         brain_state = self.map_state_to_brain_state(self.state)
-        move_code = self.som_pi_brain.get_action(brain_state)
+        move_code = self.brain.get_action(brain_state)
         return move_code
 
     # define function to set exploration rate for ai model
