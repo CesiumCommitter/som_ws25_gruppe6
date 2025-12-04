@@ -40,7 +40,7 @@ class hanoi:
                     row_parts.append(f"|{padding}{disk}|")
                 else:
                     row_parts.append(f"|{' ' * tower_width}|")
-            lines.append("  ".join(row_parts))
+            lines.append("".join(row_parts))
 
         # Basislinie
         base = "=" * ((tower_width + 2) * 3 + 4)

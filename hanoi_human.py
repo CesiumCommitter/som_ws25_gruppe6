@@ -32,4 +32,11 @@ class hanoi_human(hanoi):
             print(f"An unexpected Error occured: {e}")
 
     def run(self):
-        pass
+        print(self)
+        while not self.check_won():
+            move_code = self.input_move()
+            if self.check_move_legal(move_code):
+                self.move(move_code)
+            else:
+                print("Move not allowed!")
+            print(self)

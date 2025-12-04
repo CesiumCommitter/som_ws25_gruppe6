@@ -2,74 +2,56 @@ from hanoi_human import hanoi_human
 from hanoi_ai import hanoi_ai
 import matplotlib.pyplot as plt
 
-game_mode = 1
-ring_count = 3
-ai_iterations_learn = 50
-ai_iterations_play = 50
+# Fetch Game Mode
+while True:
+    try:
+        game_mode = int(input("Please Input game Mode (0=Human, 1=AI):"))
+        print(game_mode)
+        if not game_mode in range(2):
+            raise ValueError
+        break
+    except ValueError:
+        print("Input must be an integer between 0 and 1.")
+# Fetch Ring Amount
+while True:
+    try:
+        num_rings = int(input("Choose ring amount! (>2)"))
+        if num_rings < 3:
+            raise ValueError
+        break
+    except ValueError:
+        print("invalid! Number of rings must be >2!")
 
 if game_mode == 0:
-    game_instance = hanoi_human(ring_count)
-    print(game_instance)
-    while not game_instance.check_won():
-        move_code = game_instance.input_move()
-        if game_instance.check_move_legal(move_code):
-            game_instance.move(move_code)
-        else:
-            print("Move not allowed!")
-        print(game_instance)
+    game_instance = hanoi_human(num_rings)
+    game_instance.run()
 
 elif game_mode == 1:
-    history_iterations = []
-    history_moves_used = []
-    history_forbidden_moves = []
-    game_instance = hanoi_ai(ring_count)
-    for j in range(0, ai_iterations_learn):
-        game_instance.reset_state()
-        #print(game_instance)
-        while not game_instance.check_won():
-            brain_action = game_instance.fetch_move()
-            move_code = game_instance.map_brain_action_to_move_code(brain_action)
-            brain_state_old = game_instance.map_state_to_brain_state(game_instance.state)
-            if game_instance.check_move_legal(move_code):
-                game_instance.move(move_code)
-                brain_state_new = game_instance.map_state_to_brain_state(game_instance.state)
-                game_instance.brain.reward_action(brain_state_old, brain_state_new, brain_action, -1)
-            else:
-                game_instance.brain.reward_action(brain_state_old, brain_state_old, brain_action, -10)
-                game_instance.forbidden_move_count += 1
-        game_instance.brain.reward_action(brain_state_old, brain_state_new, brain_action, 10000)
-        history_iterations.append(j)
-        history_moves_used.append(game_instance.move_count)
-        history_forbidden_moves.append(game_instance.forbidden_move_count)
 
-    for k in range(0, ai_iterations_play):
-        game_instance.reset_state()
-        game_instance.brain.epsilon = 0
-        while not game_instance.check_won():
-            brain_action = game_instance.fetch_move()
-            move_code = game_instance.map_brain_action_to_move_code(brain_action)
-            if game_instance.check_move_legal(move_code):
-                game_instance.move(move_code)
-            else:
-                game_instance.forbidden_move_count += 1
-        history_iterations.append(ai_iterations_learn+k)
-        history_moves_used.append(game_instance.move_count)
-        history_forbidden_moves.append(game_instance.forbidden_move_count)
+    # Fetch amount of learning iterations (for learning and plot)
+    while True:
+        try:
+            iterations_learning = int(input("How many Learning iterations?"))
+            if iterations_learning < 1:
+                raise ValueError
+            break
+        except ValueError:
+            print("Invalid, Learning Iterations must be >= 1")
+    # Fetch amount of playing iterations (for plot)
+    while True:
+        try:
+            iterations_playing = int(input("How many Playing iterations?"))
+            if iterations_playing < 1:
+                raise ValueError
+            break
+        except ValueError:
+            print("Invalid, Playing Iterations must be >= 1!")
 
-    # Loop For Last game (shown to window)
-    game_instance.reset_state()
-    print(game_instance.__str__())
-    while not game_instance.check_won():
-        brain_action = game_instance.fetch_move()
-        move_code = game_instance.map_brain_action_to_move_code(brain_action)
-        if game_instance.check_move_legal(move_code):
-            game_instance.move(move_code)
-        else:
-            game_instance.forbidden_move_count += 1
-            print("Move not allowed!")
-        print(game_instance.__str__())
+    # Instance & Run Game
+    game_instance = hanoi_ai(num_rings)
+    history_iterations, history_moves_used, history_forbidden_moves = game_instance.run(iterations_learning, iterations_playing)
 
-
+    # Plot Learning History
     fig, (ax1, ax2) = plt.subplots(2)
     fig.suptitle('Vertically stacked subplots')
     ax1.plot(history_iterations, history_moves_used)
