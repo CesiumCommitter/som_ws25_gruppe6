@@ -31,3 +31,5 @@ class hanoi_human(hanoi):
         except Exception as e:
             print(f"An unexpected Error occured: {e}")
 
+    def run(self):
+        pass
