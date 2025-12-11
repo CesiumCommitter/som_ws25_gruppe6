@@ -2,6 +2,7 @@ from paho.mqtt import client as mqtt_client
 import datetime
 import time
 from DHT_Sensor import DHTSensor
+from random import randint
 
 # Setup MQTT
 MQTT_PORT=1883
@@ -11,10 +12,10 @@ MQTT_TOPIC="dht11/temp"
 
 while True:
     # Fetch Values
-    temp_value = DHTSensor().dht_read_temp()
+    #temp_value = DHTSensor().dht_read_temp()
+    temp_value = randint(0,50)
     timestamp = datetime.datetime.now().isoformat()
     text = f"{temp_value}_{timestamp}"
-    print(text)
 
     #Send Text to MQTT
     client = mqtt_client.Client(mqtt_client.CallbackAPIVersion.VERSION1,MQTT_CLIENT_NAME)
