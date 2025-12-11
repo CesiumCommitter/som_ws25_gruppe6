@@ -14,6 +14,7 @@ while True:
     temp_value = DHTSensor().dht_read_temp()
     timestamp = datetime.datetime.now().isoformat()
     text = f"{temp_value}_{timestamp}"
+    print(text)
 
     #Send Text to MQTT
     client = mqtt_client.Client(mqtt_client.CallbackAPIVersion.VERSION1,MQTT_CLIENT_NAME)
