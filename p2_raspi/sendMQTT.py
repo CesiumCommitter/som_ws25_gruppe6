@@ -1,7 +1,7 @@
 from paho.mqtt import client as mqtt_client
 import datetime
 import time
-from p2_raspi.DHT_Sensor import DHTSensor
+from DHT_Sensor import DHTSensor
 
 # Setup MQTT
 MQTT_PORT=1883
