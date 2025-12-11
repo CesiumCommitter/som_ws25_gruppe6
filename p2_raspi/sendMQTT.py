@@ -13,9 +13,9 @@ sensor = DHTSensor()
 while True:
     # Fetch Values
     temp_value = sensor.dht_read_temp()
-    #temp_value = randint(0,50)
+    humid_value = sensor.dht_read_humidity()
     timestamp = datetime.datetime.now().isoformat()
-    text = f"{temp_value}_{timestamp}"
+    text = f"{temp_value}_{humid_value}_{timestamp}"
 
     #Send Text to MQTT
     client = mqtt_client.Client(mqtt_client.CallbackAPIVersion.VERSION1,MQTT_CLIENT_NAME)
