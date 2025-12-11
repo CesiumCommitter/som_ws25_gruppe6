@@ -20,4 +20,4 @@ while True:
     client.connect(MQTT_ADDRESS, MQTT_PORT)
     client.publish(MQTT_TOPIC, text)
 
-    time.sleep(3)
+    time.sleep(5)

@@ -12,25 +12,20 @@ root.title('DHT11 Sensor Data Visualisation')
 root.state('zoomed')
 root.config(background='#fafafa')
 
-xar = []
-yar = []
+xar = [] # Ordered list of temperature values
+yar = [] # Ordered list of timestamps
 
 style.use('bmh')
 fig = plt.figure(figsize=(14, 4.5), dpi=100)
 ax1 = fig.add_subplot(1, 1, 1)
 ax1.set_ylim(0, 50)
 line, = ax1.plot(xar, yar, 'b', marker='x')
-#ser = serial.Serial('com3', 9600)
 
-def animate(i):
-    #ser.reset_input_buffer()
-    #data = ser.readline().decode("utf-8")
-    #data_array = data.split(',')
-    #yvalue = float(data_array[1])
-    yar.append(20+random.randint(-1, +1))
-    xar.append(i)
+def animate(temperature, timestamp):
+    yar.append(temperature)
+    xar.append(timestamp)
     line.set_data(xar, yar)
-    ax1.set_xlim(0, i+1)
+    ax1.set_xlim(0, timestamp)
 
 plotcanvas = FigureCanvasTkAgg(fig, root)
 plotcanvas.get_tk_widget().grid(column=1, row=1)

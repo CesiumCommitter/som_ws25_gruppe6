@@ -2,7 +2,7 @@ from paho.mqtt import client as mqtt_client
 import time
 
 MQTT_PORT = 1883
-MQTT_ADDRESS = "141.22.36.___"
+MQTT_ADDRESS = "141.22.36.200"
 MQTT_CLIENT_NAME = "Gruppe6_PiSub"
 MQTT_TOPIC = "Gruppenname/Kanal"
 TICK_RATE_HZ = 2
