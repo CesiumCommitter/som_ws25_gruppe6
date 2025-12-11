@@ -8,14 +8,12 @@ class DHTSensor:
         # dhtDevice = adafruit_dht.DHT11(board.D23)
         self.device = adafruit_dht.DHT11(pin)
 
-    def dht_read(self):
+    def dht_read_temp(self):
         while True:
             try:
                 temperature_c = self.device.temperature
-                # temperature_f = temperature_c * (9 / 5) + 32
-                humidity = self.device.humidity
-                # print("Temp: {:.1f} F / {:.1f} C    Humidity: {}% ".format(temperature_f, temperature_c, humidity))
-                return temperature_c, humidity
+                #print(f"Temp: {round(temperature_c)} C")
+                return temperature_c
             except RuntimeError as error:
                 # Fehler passieren ziemlich oft, DHT's sind schwer zu lesen, einfach weitermachen
                 print(error.args[0])
@@ -23,5 +21,21 @@ class DHTSensor:
                 continue
             except Exception as error:
                 self.device.exit()
-                time.sleep(2.0)
                 raise error
+            time.sleep(2.0)
+
+    def dht_read_humidity(self):
+        while True:
+            try:
+                humidity = self.device.humidity
+                #print(f"Humidity: {humidity}%")
+                return humidity
+            except RuntimeError as error:
+                # Fehler passieren ziemlich oft, DHT's sind schwer zu lesen, einfach weitermachen
+                print(error.args[0])
+                time.sleep(2.0)
+                continue
+            except Exception as error:
+                self.device.exit()
+                raise error
+            time.sleep(2.0)
