@@ -9,11 +9,11 @@ MQTT_PORT=1883
 MQTT_ADDRESS="127.0.0.1"
 MQTT_CLIENT_NAME="Gruppe6_PiPub"
 MQTT_TOPIC="dht11/temp"
-
+sensor = DHTSensor()
 while True:
     # Fetch Values
-    #temp_value = DHTSensor().dht_read_temp()
-    temp_value = randint(0,50)
+    temp_value = sensor.dht_read_temp()
+    #temp_value = randint(0,50)
     timestamp = datetime.datetime.now().isoformat()
     text = f"{temp_value}_{timestamp}"
 
