@@ -1,4 +1,6 @@
 # For MQTT
+import datetime
+
 from paho.mqtt import client as mqtt_client
 import time
 
@@ -40,9 +42,7 @@ root.state('zoomed')
 root.config(background='#fafafa')
 
 
-
-
-# Define Plot
+# Define Plot 1
 xar = [] # Ordered list of temperature values
 yar = [] # Ordered list of timestamps
 style.use('bmh')
@@ -51,13 +51,52 @@ ax1 = fig.add_subplot(1, 1, 1)
 ax1.set_ylim(0, 50)
 line, = ax1.plot(xar, yar, 'b', marker='x')
 
+"""
+# Define Plot 2
+xar2 = [] # Ordered list of humidity values
+yar2 = [] # Ordered list of timestamps
+#style.use('bmh')
+fig = plt.figure(figsize=(14, 4.5), dpi=100)
+ax2 = fig.add_subplot(2, 1, 2)
+ax2.set_ylim(0, 100)
+line, = ax2.plot(xar2, yar2, 'b', marker='x')
+"""
+
+# Define Starting variables
+last_value = ""
+value_queue = []
+datetime_start = datetime.datetime.now()
 
 # Define Function to add/animate Graph
-def animate(temperature, timestamp):
-    yar.append(temperature)
-    xar.append(timestamp)
-    line.set_data(xar, yar)
-    ax1.set_xlim(0, timestamp)
+def animate(i):
+    while len(message_queue)>0:
+
+        # Fetch encoded Value
+        last_value=message_queue.pop()
+        value_queue.append(last_value)
+
+        # Decode Value
+        vals = last_value.split("_", 3)
+        int_temp = int(vals[0])
+        int_humidity = int(vals[1])
+        str_timestamp = vals[2]
+        timestamp_obj = datetime.datetime.fromisoformat(str_timestamp)
+
+        # Update Graph 1
+        yar.append(int_temp)
+        xar.append(timestamp_obj)
+        line.set_data(xar, yar)
+        ax1.set_xlim(datetime_start, timestamp_obj)
+
+
+        """
+        # Update Graph 2
+        yar2.append(int_humidity)
+        xar2.append(timestamp_obj)
+        line.set_data(xar2, yar2)
+        ax1.set_xlim(datetime_start, timestamp_obj)
+        """
+
 
 plotcanvas = FigureCanvasTkAgg(fig, root)
 plotcanvas.get_tk_widget().grid(column=1, row=1)
