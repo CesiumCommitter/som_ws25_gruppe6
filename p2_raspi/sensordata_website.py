@@ -39,6 +39,17 @@ def index():
         <h2>Luftfeuchtigkeit</h2>
         <canvas id="humChart"></canvas>
 
+    <button
+        onclick="window.location.href='/csv'"
+        style="
+            margin-top: 30px;
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+        ">
+        CSV herunterladen
+    </button>
+
         <script>
             async function loadData() {
                 const res = await fetch('/data');
@@ -96,6 +107,17 @@ def data():
         "temp": temperature,
         "hum": humidity
     })
+
+@route('/csv')
+def download_csv():
+    response.content_type = 'text/csv'
+    response.headers['Content-Disposition'] = 'attachment; filename="sensordaten.csv"'
+
+    csv_data = "time,temperature,humidity\n"
+    for t, temp, hum in zip(timestamps, temperature, humidity):
+        csv_data += f"{t},{temp},{hum}\n"
+
+    return csv_data
 
 def background_server_function():
     run(host='0.0.0.0', port=80, debug=True)
