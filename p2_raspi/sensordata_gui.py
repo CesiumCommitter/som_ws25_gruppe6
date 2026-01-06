@@ -1,5 +1,7 @@
 # For MQTT
 import datetime
+import os
+import random
 
 from paho.mqtt import client as mqtt_client
 import time
@@ -24,6 +26,7 @@ TICK_RATE = 1/TICK_RATE_HZ
 
 # Start MQTT Listening
 message_queue = []
+'''
 def on_message(client, userdata, msg):
     message = msg.payload.decode()
     message_queue.append(message)
@@ -32,7 +35,17 @@ client.connect(MQTT_ADDRESS, MQTT_PORT)
 client.subscribe(MQTT_TOPIC)
 client.on_message = on_message
 client.loop_start()
+'''
 
+
+def dummy_input_loop():
+    while True:
+        dummy_temp = random.randint(10,30)
+        dummy_humid = random.randint(30,90)
+        dummy_isotimestamp = datetime.datetime.now().isoformat()
+        dummy_message = f"{dummy_temp}_{dummy_humid}_{dummy_isotimestamp}"
+        message_queue.append(dummy_message)
+        time.sleep(1)
 
 # Define GUI
 root = Tk()
@@ -101,5 +114,7 @@ def animate(i):
 plotcanvas = FigureCanvasTkAgg(fig, root)
 plotcanvas.get_tk_widget().grid(column=1, row=1)
 ani = animation.FuncAnimation(fig, animate, interval=1000, blit=False)
+
+dummy_input_loop()
 
 root.mainloop()
