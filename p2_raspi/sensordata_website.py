@@ -1,20 +1,3 @@
-""""
-from bottle import route, run
-import threading, time
-
-def background_server_function(name):
-    run(host='0.0.0.0', port=80, debug=True)
-
-@route('/hello')
-def hello():
-    return "Hello Class çSOM WiSe 2025!"
-
-threading.Thread(target=background_server_function, args=(1,), daemon=True).start()
-while True:
-    print("Mainloop is here.")
-    time.sleep(1)
-"""
-
 from bottle import route, run, response
 import threading, time, json, random
 from paho.mqtt import client as mqtt_client
@@ -28,6 +11,7 @@ MQTT_TOPIC = "dht11/temp"
 temperature = []
 humidity = []
 timestamps = []
+
 
 @route('/test')
 def index():
@@ -124,6 +108,7 @@ def index():
     </html>
     """
 
+
 @route('/data')
 def data():
     response.content_type = 'application/json'
@@ -132,6 +117,7 @@ def data():
         "temp": temperature,
         "hum": humidity
     })
+
 
 @route('/csv')
 def download_csv():
@@ -144,22 +130,10 @@ def download_csv():
 
     return csv_data
 
+
 def background_server_function():
     run(host='0.0.0.0', port=8080, debug=True)
-"""
-def sensor_loop():
-    while True:
-        timestamps.append(time.strftime("%H:%M:%S"))
-        temperature.append(20 + random.uniform(-1, 1))
-        humidity.append(50 + random.uniform(-5, 5))
 
-        # Speicher begrenzen
-        timestamps[:] = timestamps[-20:]
-        temperature[:] = temperature[-20:]
-        humidity[:] = humidity[-20:]
-
-        time.sleep(1)
-"""
 
 def on_message(client, userdata, msg):
     payload = msg.payload.decode()
@@ -190,9 +164,7 @@ def mqtt_loop():
     client.loop_forever()
 
 
-
 threading.Thread(target=background_server_function, daemon=True).start()
-#threading.Thread(target=sensor_loop, daemon=True).start()
 threading.Thread(target=mqtt_loop, daemon=True).start()
 
 
