@@ -110,16 +110,11 @@ ani = animation.FuncAnimation(fig, animate, interval=1000, blit=False)
 def save_csv():
 
     # 1. Open the 'Save As' dialog
-    # .asksaveasfilename returns the path chosen or an empty string if cancelled
     file_path = fd.asksaveasfilename(
         defaultextension='.csv',
         filetypes=[("CSV files", "*.csv"), ("All files", "*.*")],
         title="Choose where to save your data",
     )
-
-    xar = [0,1,2]
-    yar = [20,25,30]
-    yar2 = [30,35,40]
 
     # 2. Check if user didn't hit 'Cancel'
     if file_path:
