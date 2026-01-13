@@ -1,5 +1,5 @@
 from hanoi_human import hanoi_human
-from hanoi_ai import hanoi_ai
+from hanoiai import HanoiAi
 import matplotlib.pyplot as plt
 
 
@@ -51,7 +51,7 @@ elif game_mode == 1:
             print("Invalid, Playing Iterations must be >= 1!")
 
     # Instance & Run Game
-    game_instance = hanoi_ai(num_rings)
+    game_instance = HanoiAi(num_rings)
     history_iterations, history_moves_used, history_forbidden_moves = game_instance.run(iterations_learning, iterations_playing)
 
     # Plot Learning History

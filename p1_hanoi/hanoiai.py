@@ -2,9 +2,10 @@ from hanoi import hanoi
 from SOMPiBrain import SOMPiBrain
 from itertools import product
 
-class hanoi_ai(hanoi):
 
-    # define subclass constructor
+class HanoiAi(hanoi):
+
+    # Define subclass constructor
     def __init__(self, ring_count):
         # define parent class constructor
         super().__init__(ring_count)
@@ -12,30 +13,32 @@ class hanoi_ai(hanoi):
         action_num = 6
         self.brain = SOMPiBrain(state_num, action_num)
 
-    # define method to fetch next move from ai model
+    # Method: Fetch next move from rl-model
     def fetch_move(self):
         brain_state = self.map_state_to_brain_state(self.state)
         move_code = self.brain.get_action(brain_state)
         return move_code
 
+    # Method: Convert internal state depiction to rl-usable int
     def map_state_to_brain_state(self, state):
         state_space_str = [''.join(str(turm) for turm in komb) for komb in product([1, 2, 3], repeat=self.ring_count)]
         state_space = list(map(int, state_space_str))
         brain_state = state_space.index(state)
         return brain_state
 
+    # Method: Convert action-num (returned by rl-model) from int to internal depiction
     def map_brain_action_to_move_code(self, brain_action):
         move_space = [12, 13, 23, 21, 31, 32]
         move_code = move_space[brain_action]
         return move_code
 
+    # Method: Run games first with learning then without learning
     def run(self, iterations_learning, iterations_playing):
         history_iterations = []
         history_moves_used = []
         history_forbidden_moves = []
         for j in range(0, iterations_learning):
             self.reset_state()
-            # print(game_instance)
             while not self.check_won():
                 brain_action = self.fetch_move()
                 move_code = self.map_brain_action_to_move_code(brain_action)
