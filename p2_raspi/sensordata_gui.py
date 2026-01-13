@@ -14,22 +14,19 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 # Define MQTT Source
 MQTT_PORT = 1883
 MQTT_ADDRESS = "141.22.36.200"
-MQTT_CLIENT_NAME = "Gruppe6_PiSub"
+MQTT_CLIENT_NAME = "Gruppe6_PiSub_Sammy"
 MQTT_TOPIC = "dht11/temp"
-TICK_RATE_HZ = 2
-TICK_RATE = 1/TICK_RATE_HZ
 
 
 # Start MQTT Listening
 message_queue = []
 def on_message(client, userdata, msg):
-    print("message received")
     message = msg.payload.decode()
     message_queue.append(message)
-client = mqtt_client.Client(mqtt_client.CallbackAPIVersion.VERSION1, MQTT_CLIENT_NAME)
-client.connect(MQTT_ADDRESS, MQTT_PORT)
-client.subscribe(MQTT_TOPIC)
+client = mqtt_client.Client(mqtt_client.CallbackAPIVersion.VERSION1, MQTT_CLIENT_NAME, clean_session=True)
 client.on_message = on_message
+client.connect(MQTT_ADDRESS, MQTT_PORT, keepalive=60)
+client.subscribe(MQTT_TOPIC)
 client.loop_start()
 
 
@@ -64,6 +61,7 @@ line1, = ax1.plot(xar, yar, 'b', marker='x')
 ax2 = fig.add_subplot(2, 1, 2)
 ax2.set_ylim(0, 100)
 ax2.set_title("Humidity over Time")
+
 line2, = ax2.plot(xar2, yar2, 'r', marker='o')
 
 
