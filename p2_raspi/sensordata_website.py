@@ -17,6 +17,12 @@ while True:
 
 from bottle import route, run, response
 import threading, time, json, random
+from paho.mqtt import client as mqtt_client
+
+MQTT_PORT = 1883
+MQTT_ADDRESS = "141.22.36.200"
+MQTT_CLIENT_NAME = "Gruppe6_Web"
+MQTT_TOPIC = "dht11/temp"
 
 # Beispieldaten
 temperature = []
@@ -121,7 +127,7 @@ def download_csv():
 
 def background_server_function():
     run(host='0.0.0.0', port=80, debug=True)
-
+"""
 def sensor_loop():
     while True:
         timestamps.append(time.strftime("%H:%M:%S"))
@@ -134,9 +140,42 @@ def sensor_loop():
         humidity[:] = humidity[-20:]
 
         time.sleep(1)
+"""
+
+def on_message(client, userdata, msg):
+    payload = msg.payload.decode()
+    vals = payload.split("_", 3)
+
+    temp = int(vals[0])
+    hum = int(vals[1])
+    ts = vals[2]
+
+    temperature.append(temp)
+    humidity.append(hum)
+    timestamps.append(ts)
+
+    # Speicher begrenzen
+    temperature[:] = temperature[-20:]
+    humidity[:] = humidity[-20:]
+    timestamps[:] = timestamps[-20:]
+
+
+def mqtt_loop():
+    client = mqtt_client.Client(
+        mqtt_client.CallbackAPIVersion.VERSION1,
+        MQTT_CLIENT_NAME
+    )
+    client.on_message = on_message
+    client.connect(MQTT_ADDRESS, MQTT_PORT)
+    client.subscribe(MQTT_TOPIC)
+    client.loop_forever()
+
+
 
 threading.Thread(target=background_server_function, daemon=True).start()
-threading.Thread(target=sensor_loop, daemon=True).start()
+#threading.Thread(target=sensor_loop, daemon=True).start()
+threading.Thread(target=mqtt_loop, daemon=True).start()
+
 
 while True:
     print("Mainloop is here.")
