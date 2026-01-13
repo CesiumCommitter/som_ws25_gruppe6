@@ -9,6 +9,8 @@ from matplotlib import pyplot as plt
 import matplotlib.animation as animation
 from matplotlib import style
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import tkinter.filedialog as fd
+import csv
 
 
 # Define MQTT Source
@@ -54,6 +56,8 @@ fig = plt.figure(figsize=(14, 4.5), dpi=100)
 ax1 = fig.add_subplot(2, 1, 1)
 ax1.set_ylim(0, 50)
 ax1.set_title("Temperature over Time")
+ax1.set_xlabel("Time")
+ax1.set_ylabel("Temperature (°C)")
 line1, = ax1.plot(xar, yar, 'b', marker='x')
 
 
@@ -61,7 +65,8 @@ line1, = ax1.plot(xar, yar, 'b', marker='x')
 ax2 = fig.add_subplot(2, 1, 2)
 ax2.set_ylim(0, 100)
 ax2.set_title("Humidity over Time")
-
+ax2.set_xlabel("Time")
+ax2.set_ylabel("Relative Humidity (%)")
 line2, = ax2.plot(xar2, yar2, 'r', marker='o')
 
 
@@ -100,6 +105,51 @@ def animate(i):
 plotcanvas = FigureCanvasTkAgg(fig, root)
 plotcanvas.get_tk_widget().pack(expand=True, fill=tkinter.BOTH)
 ani = animation.FuncAnimation(fig, animate, interval=1000, blit=False)
+
+
+def save_csv():
+
+    # 1. Open the 'Save As' dialog
+    # .asksaveasfilename returns the path chosen or an empty string if cancelled
+    file_path = fd.asksaveasfilename(
+        defaultextension='.csv',
+        filetypes=[("CSV files", "*.csv"), ("All files", "*.*")],
+        title="Choose where to save your data",
+    )
+
+    xar = [0,1,2]
+    yar = [20,25,30]
+    yar2 = [30,35,40]
+
+    # 2. Check if user didn't hit 'Cancel'
+    if file_path:
+        try:
+            with open(file_path, mode='w', newline='') as file:
+                writer = csv.writer(file)
+
+                # 3. Write the Header Row
+                writer.writerow(["Timestamp", "Temperature (C)", "Humidity (%)"])
+
+                for row in zip(xar, yar, yar2):
+                    writer.writerow(row)
+
+            print(f"Data successfully saved to {file_path}")
+
+        except Exception as e:
+            print(f"Error saving file: {e}")
+
+
+# Create frame to hold buttons
+button_frame = tkinter.Frame(root)
+button_frame.pack(side=tkinter.BOTTOM, fill=tkinter.X, padx=10, pady=10)
+
+# Add Button 2 to frame
+button2 = tkinter.Button(button_frame, text="Exit", command=root.quit)
+button2.pack(side=tkinter.RIGHT, padx=5)
+
+# Add Button 1 to frame
+button1 = tkinter.Button(button_frame, text="save .csv", command=save_csv)
+button1.pack(side=tkinter.RIGHT, padx=5)
 
 
 root.mainloop()
