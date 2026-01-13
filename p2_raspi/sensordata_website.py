@@ -145,7 +145,7 @@ def download_csv():
     return csv_data
 
 def background_server_function():
-    run(host='0.0.0.0', port=80, debug=True)
+    run(host='0.0.0.0', port=8080, debug=True)
 """
 def sensor_loop():
     while True:
