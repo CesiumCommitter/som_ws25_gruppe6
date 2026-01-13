@@ -2,6 +2,7 @@
 import datetime
 import os
 import random
+import tkinter
 
 from paho.mqtt import client as mqtt_client
 import time
@@ -26,7 +27,6 @@ TICK_RATE = 1/TICK_RATE_HZ
 
 # Start MQTT Listening
 message_queue = []
-'''
 def on_message(client, userdata, msg):
     message = msg.payload.decode()
     message_queue.append(message)
@@ -35,17 +35,7 @@ client.connect(MQTT_ADDRESS, MQTT_PORT)
 client.subscribe(MQTT_TOPIC)
 client.on_message = on_message
 client.loop_start()
-'''
 
-
-def dummy_input_loop():
-    while True:
-        dummy_temp = random.randint(10,30)
-        dummy_humid = random.randint(30,90)
-        dummy_isotimestamp = datetime.datetime.now().isoformat()
-        dummy_message = f"{dummy_temp}_{dummy_humid}_{dummy_isotimestamp}"
-        message_queue.append(dummy_message)
-        time.sleep(1)
 
 # Define GUI
 root = Tk()
@@ -56,24 +46,22 @@ root.config(background='#fafafa')
 
 
 # Define Plot 1
-xar = [] # Ordered list of temperature values
-yar = [] # Ordered list of timestamps
+xar = [] # Ordered list of timestamps
+yar = [] # Ordered list of temperature values
 style.use('bmh')
 fig = plt.figure(figsize=(14, 4.5), dpi=100)
 ax1 = fig.add_subplot(1, 1, 1)
 ax1.set_ylim(0, 50)
+ax1.set_title("Temperature over Time")
 line, = ax1.plot(xar, yar, 'b', marker='x')
 
-"""
 # Define Plot 2
-xar2 = [] # Ordered list of humidity values
-yar2 = [] # Ordered list of timestamps
-#style.use('bmh')
-fig = plt.figure(figsize=(14, 4.5), dpi=100)
+yar2 = [] # Ordered list of humidity values
 ax2 = fig.add_subplot(2, 1, 2)
 ax2.set_ylim(0, 100)
-line, = ax2.plot(xar2, yar2, 'b', marker='x')
-"""
+ax2.set_title("Humidity over Time")
+line2, = ax2.plot(xar, yar2, 'r', marker='o')
+
 
 # Define Starting variables
 last_value = ""
@@ -99,22 +87,18 @@ def animate(i):
         yar.append(int_temp)
         xar.append(timestamp_obj)
         line.set_data(xar, yar)
-        ax1.set_xlim(datetime_start, timestamp_obj)
+        ax1.set_xlim(xar[0], timestamp_obj)
 
-
-        """
         # Update Graph 2
         yar2.append(int_humidity)
-        xar2.append(timestamp_obj)
-        line.set_data(xar2, yar2)
-        ax1.set_xlim(datetime_start, timestamp_obj)
-        """
+        xar.append(timestamp_obj)
+        line.set_data(xar, yar2)
+        ax1.set_xlim(xar[0], timestamp_obj)
 
 
 plotcanvas = FigureCanvasTkAgg(fig, root)
-plotcanvas.get_tk_widget().grid(column=1, row=1)
+plotcanvas.get_tk_widget().pack(expand=True, fill=tkinter.BOTH)
 ani = animation.FuncAnimation(fig, animate, interval=1000, blit=False)
 
-dummy_input_loop()
 
 root.mainloop()
