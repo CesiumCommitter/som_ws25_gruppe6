@@ -12,7 +12,7 @@ class hanoi_ai(hanoi):
         action_num = 6
         self.brain = SOMPiBrain(state_num, action_num)
 
-    # define function to fetch upcoming move from ai model
+    # define method to fetch next move from ai model
     def fetch_move(self):
         brain_state = self.map_state_to_brain_state(self.state)
         move_code = self.brain.get_action(brain_state)
