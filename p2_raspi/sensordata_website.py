@@ -79,11 +79,21 @@ def index():
                         labels: [],
                         datasets: [{
                             label: 'Temperatur (°C)',
-                            data: []
+                            data: [],
+                            tension: 0.3
                         }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                min: 0,
+                                max: 50
+                            }
+                        }
                     }
                 }
             );
+
 
             const humChart = new Chart(
                 document.getElementById('humChart'),
@@ -93,8 +103,17 @@ def index():
                         labels: [],
                         datasets: [{
                             label: 'Luftfeuchtigkeit (%)',
-                            data: []
+                            data: [],
+                            tension: 0.3
                         }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                min: 0,
+                                max: 100
+                            }
+                        }
                     }
                 }
             );
