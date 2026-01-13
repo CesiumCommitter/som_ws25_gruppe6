@@ -1,12 +1,7 @@
 # For MQTT
 import datetime
-import os
-import random
 import tkinter
-
 from paho.mqtt import client as mqtt_client
-import time
-
 
 # For GUI
 from tkinter import *
@@ -46,21 +41,24 @@ root.state('zoomed')
 root.config(background='#fafafa')
 
 
-
+# Define Variables holding data
 xar = [] # Ordered list of timestamps
 yar = [] # Ordered list of temperature values
 xar2 = [] # Ordered list of timestamps
 yar2 = [] # Ordered list of humidity values
 
 
+# Define Matplotlib Figure Style
 style.use('bmh')
 fig = plt.figure(figsize=(14, 4.5), dpi=100)
+
 
 # Define Plot 1
 ax1 = fig.add_subplot(2, 1, 1)
 ax1.set_ylim(0, 50)
 ax1.set_title("Temperature over Time")
 line, = ax1.plot(xar, yar, 'b', marker='x')
+
 
 # Define Plot 2
 ax2 = fig.add_subplot(2, 1, 2)
@@ -69,17 +67,16 @@ ax2.set_title("Humidity over Time")
 line2, = ax2.plot(xar2, yar2, 'r', marker='o')
 
 
-# Define Starting variables
-last_value = ""
+# Define List to iterate the animation over
 value_queue = []
-datetime_start = datetime.datetime.now()
+
 
 # Define Function to add/animate Graph
 def animate(i):
     while len(message_queue)>0:
 
         # Fetch encoded Value
-        last_value=message_queue.pop()
+        last_value = message_queue.pop()
         value_queue.append(last_value)
 
         # Decode Value
@@ -100,7 +97,7 @@ def animate(i):
         xar2.append(timestamp_obj)
         print(xar2, yar2)
         line.set_data(xar2, yar2)
-        ax1.set_xlim(xar2[0], timestamp_obj)
+        ax2.set_xlim(xar2[0], timestamp_obj)
 
 
 plotcanvas = FigureCanvasTkAgg(fig, root)
