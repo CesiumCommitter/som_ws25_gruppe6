@@ -2,6 +2,7 @@ from hanoi_human import hanoi_human
 from hanoi_ai import hanoi_ai
 import matplotlib.pyplot as plt
 
+
 # Fetch Game Mode
 while True:
     try:
@@ -12,6 +13,7 @@ while True:
         break
     except ValueError:
         print("Input must be an integer between 0 and 1.")
+
 # Fetch Ring Amount
 while True:
     try:
@@ -37,6 +39,7 @@ elif game_mode == 1:
             break
         except ValueError:
             print("Invalid, Learning Iterations must be >= 1")
+
     # Fetch amount of playing iterations (for plot)
     while True:
         try:

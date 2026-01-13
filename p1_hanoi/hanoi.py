@@ -1,12 +1,10 @@
 class hanoi:
-    # Sammy: define class constructor
     def __init__(self, ring_count):
         self.move_count = 0
         self.forbidden_move_count = 0
         self.ring_count = ring_count
         self.state = int('1' * ring_count) # ring count has to be greater than 3
 
-    # Misha: define function to return ascii art when class instance is printed
     def __str__(self):
         rings = [int(d) for d in str(self.state)]
         n = self.ring_count
@@ -55,7 +53,6 @@ class hanoi:
 
         return "\n".join(lines)
 
-    # Michel: define function to check if a move is allowed
     def check_move_legal(self, move_code):
         new_tower = int(str(move_code)[1])
         old_tower = int(str(move_code)[0])
@@ -84,7 +81,6 @@ class hanoi:
           
         return old_ring_index < new_ring_index
 
-    # Jaafar: define function to execute a move
     def move(self, move_code):
         new_tower = int(str(move_code)[1])
         old_tower = int(str(move_code)[0]) 
@@ -106,12 +102,10 @@ class hanoi:
         self.move_count += 1
         return None
 
-    # Sammy: define function to check whether a game has been won
     def check_won(self):
         bool_won = (self.state == int('3' * self.ring_count))
         return bool_won
 
-    # Sammy: define function to reset game state (after a game has ended)
     def reset_state(self):
         self.state = int('1' * self.ring_count)
         self.move_count = 0
