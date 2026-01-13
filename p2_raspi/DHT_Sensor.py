@@ -4,7 +4,7 @@ import adafruit_dht
 
 class DHTSensor:
     def __init__(self):
-        self.device = adafruit_dht.DHT11(board.D23)
+        self.device = adafruit_dht.DHT11(board.D23, use_pulseio=False)
 
     def dht_read_temp(self):
         while True:
