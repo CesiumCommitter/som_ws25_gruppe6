@@ -57,7 +57,7 @@ fig = plt.figure(figsize=(14, 4.5), dpi=100)
 ax1 = fig.add_subplot(2, 1, 1)
 ax1.set_ylim(0, 50)
 ax1.set_title("Temperature over Time")
-line, = ax1.plot(xar, yar, 'b', marker='x')
+line1, = ax1.plot(xar, yar, 'b', marker='x')
 
 
 # Define Plot 2
@@ -89,14 +89,13 @@ def animate(i):
         # Update Graph 1
         yar.append(int_temp)
         xar.append(timestamp_obj)
-        line.set_data(xar, yar)
+        line1.set_data(xar, yar)
         ax1.set_xlim(xar[0], timestamp_obj)
 
         # Update Graph 2
         yar2.append(int_humidity)
         xar2.append(timestamp_obj)
-        print(xar2, yar2)
-        line.set_data(xar2, yar2)
+        line2.set_data(xar2, yar2)
         ax2.set_xlim(xar2[0], timestamp_obj)
 
 
