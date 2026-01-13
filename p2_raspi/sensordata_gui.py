@@ -28,6 +28,7 @@ TICK_RATE = 1/TICK_RATE_HZ
 # Start MQTT Listening
 message_queue = []
 def on_message(client, userdata, msg):
+    print("message received")
     message = msg.payload.decode()
     message_queue.append(message)
 client = mqtt_client.Client(mqtt_client.CallbackAPIVersion.VERSION1, MQTT_CLIENT_NAME)
@@ -45,22 +46,27 @@ root.state('zoomed')
 root.config(background='#fafafa')
 
 
-# Define Plot 1
+
 xar = [] # Ordered list of timestamps
 yar = [] # Ordered list of temperature values
+xar2 = [] # Ordered list of timestamps
+yar2 = [] # Ordered list of humidity values
+
+
 style.use('bmh')
 fig = plt.figure(figsize=(14, 4.5), dpi=100)
-ax1 = fig.add_subplot(1, 1, 1)
+
+# Define Plot 1
+ax1 = fig.add_subplot(2, 1, 1)
 ax1.set_ylim(0, 50)
 ax1.set_title("Temperature over Time")
 line, = ax1.plot(xar, yar, 'b', marker='x')
 
 # Define Plot 2
-yar2 = [] # Ordered list of humidity values
 ax2 = fig.add_subplot(2, 1, 2)
 ax2.set_ylim(0, 100)
 ax2.set_title("Humidity over Time")
-line2, = ax2.plot(xar, yar2, 'r', marker='o')
+line2, = ax2.plot(xar2, yar2, 'r', marker='o')
 
 
 # Define Starting variables
@@ -91,9 +97,10 @@ def animate(i):
 
         # Update Graph 2
         yar2.append(int_humidity)
-        xar.append(timestamp_obj)
-        line.set_data(xar, yar2)
-        ax1.set_xlim(xar[0], timestamp_obj)
+        xar2.append(timestamp_obj)
+        print(xar2, yar2)
+        line.set_data(xar2, yar2)
+        ax1.set_xlim(xar2[0], timestamp_obj)
 
 
 plotcanvas = FigureCanvasTkAgg(fig, root)
