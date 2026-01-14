@@ -52,43 +52,17 @@ class HanoiBase:
         lines.append(f"Züge: {self.move_count}")
 
         return "\n".join(lines)
-
-    def check_move_legal(self, move_code):
-        new_tower = int(str(move_code)[1])
-        old_tower = int(str(move_code)[0])
-
-        rings = [int(d) for d in str(self.state)]
-        old_ring_index = None
-        new_ring_index = None
-
-        # search for the ring (size) at the start tower
-        for i in range(len(rings)):     
-            if rings[i] == old_tower:
-                old_ring_index = i # ring size (ring that changes places)
-                break
-
-        if old_ring_index is None:
-            return False # no ring on the start tower
-        
-        # search for the ring (size) at the target tower
-        for i in range(len(rings)):
-            if rings[i] == new_tower:
-                new_ring_index = i # ring size (ring that sits on the target tower)
-                break
-
-        if new_ring_index is None:
-            return True # no ring on the target tower
-          
-        return old_ring_index < new_ring_index
-
+    
+    # function to move a ring
     def move(self, move_code):
+        # get the old- and new-tower from the move-code
         new_tower = int(str(move_code)[1])
         old_tower = int(str(move_code)[0]) 
 
-        # convert integer state into list of digits
+        # convert integer state into list
         rings = [int(d) for d in str(self.state)]
 
-        # find smallest ring on old bar
+        # find smallest ring on old-tower
         for i in range(len(rings)):
             if rings[i] == old_tower:
                 rings[i] = new_tower    # move ring
@@ -102,10 +76,46 @@ class HanoiBase:
         self.move_count += 1
         return None
 
+    # function to check whether a move is allowed according to the rules
+    def check_move_legal(self, move_code):
+        # get the old- and new-tower from the move-code
+        new_tower = int(str(move_code)[1])
+        old_tower = int(str(move_code)[0])
+
+        # convert integer state into a list
+        rings = [int(d) for d in str(self.state)]
+        old_ring_index = None
+        new_ring_index = None
+
+        # find smallest ring on old-tower
+        for i in range(len(rings)):     
+            if rings[i] == old_tower:
+                old_ring_index = i      # ring index/size (ring that changes tower)
+                break
+
+        # check whether there is a ring on the old-tower
+        if old_ring_index is None:
+            return False
+        
+        # find smallest ring on old-tower
+        for i in range(len(rings)):
+            if rings[i] == new_tower:
+                new_ring_index = i # ring size (ring that sits on the target tower)
+                break
+
+        # check whether there is a ring on the new-tower
+        if new_ring_index is None:
+            return True
+        
+        # compare size of moved ring to the smallest ring on the new-tower
+        return old_ring_index < new_ring_index
+
+    # function to check whether the game has been won
     def check_won(self):
         bool_won = (self.state == int('3' * self.ring_count))
         return bool_won
 
+    # function to reset the game
     def reset_state(self):
         self.state = int('1' * self.ring_count)
         self.move_count = 0
