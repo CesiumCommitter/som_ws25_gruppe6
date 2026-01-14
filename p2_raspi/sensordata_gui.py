@@ -1,9 +1,8 @@
-# For MQTT
+# Imports for MQTT
 import datetime
 import tkinter
 from paho.mqtt import client as mqtt_client
-
-# For GUI
+# Imports for GUI
 from tkinter import *
 from matplotlib import pyplot as plt
 import matplotlib.animation as animation
@@ -20,48 +19,46 @@ MQTT_CLIENT_NAME = "Gruppe6_PiSub_Sammy"
 MQTT_TOPIC = "dht11/temp"
 
 
-# Start MQTT Listening
+# Define Message Queue
 message_queue = []
+# Function: When called, appends MQTT message to queue
 def on_message(client, userdata, msg):
     message = msg.payload.decode()
     message_queue.append(message)
 client = mqtt_client.Client(mqtt_client.CallbackAPIVersion.VERSION1, MQTT_CLIENT_NAME, clean_session=True)
 client.on_message = on_message
+# Connect to Source. Subscribe Topic. Start MQTT Client
 client.connect(MQTT_ADDRESS, MQTT_PORT, keepalive=60)
 client.subscribe(MQTT_TOPIC)
 client.loop_start()
 
 
-# Define GUI
+# Instance & define GUI-Window (size, title, color)
 root = Tk()
 root.geometry('1200x700+200+100')
 root.title('DHT11 Sensor Data Visualisation')
 root.state('zoomed')
 root.config(background='#fafafa')
 
+# Define parameter-lists for plots (time, temperature, time, humidity)
+xar1 = []
+yar1 = []
+xar2 = []
+yar2 = []
 
-# Define Variables holding data
-xar = [] # Ordered list of timestamps
-yar = [] # Ordered list of temperature values
-xar2 = [] # Ordered list of timestamps
-yar2 = [] # Ordered list of humidity values
-
-
-# Define Matplotlib Figure Style
+# Define Plot Style
 style.use('bmh')
 fig = plt.figure(figsize=(14, 4.5), dpi=100)
 
-
-# Define Plot 1
+# Define Top Plot (Temperature)
 ax1 = fig.add_subplot(2, 1, 1)
 ax1.set_ylim(0, 50)
 ax1.set_title("Temperature over Time")
 ax1.set_xlabel("Time")
 ax1.set_ylabel("Temperature (°C)")
-line1, = ax1.plot(xar, yar, 'b', marker='x')
+line1, = ax1.plot(xar1, yar1, 'b', marker='x')
 
-
-# Define Plot 2
+# Define Lower Plot (Humidity))
 ax2 = fig.add_subplot(2, 1, 2)
 ax2.set_ylim(0, 100)
 ax2.set_title("Humidity over Time")
@@ -70,19 +67,14 @@ ax2.set_ylabel("Relative Humidity (%)")
 line2, = ax2.plot(xar2, yar2, 'r', marker='o')
 
 
-# Define List to iterate the animation over
-value_queue = []
-
-
-# Define Function to add/animate Graph
+# Function: Update Graph
 def animate(i):
-    while len(message_queue)>0:
+    while len(message_queue) > 0:
 
         # Fetch encoded Value
         last_value = message_queue.pop()
-        value_queue.append(last_value)
 
-        # Decode Value
+        # Decode Value: "temperature_humidity_isotimestamp"
         vals = last_value.split("_", 3)
         int_temp = int(vals[0])
         int_humidity = int(vals[1])
@@ -90,10 +82,10 @@ def animate(i):
         timestamp_obj = datetime.datetime.fromisoformat(str_timestamp)
 
         # Update Graph 1
-        yar.append(int_temp)
-        xar.append(timestamp_obj)
-        line1.set_data(xar, yar)
-        ax1.set_xlim(xar[0], timestamp_obj)
+        yar1.append(int_temp)
+        xar1.append(timestamp_obj)
+        line1.set_data(xar1, yar1)
+        ax1.set_xlim(xar1[0], timestamp_obj)
 
         # Update Graph 2
         yar2.append(int_humidity)
@@ -102,6 +94,7 @@ def animate(i):
         ax2.set_xlim(xar2[0], timestamp_obj)
 
 
+# Convert Plot to canvas. Create Widget from Canvas. Pack Widget. Refresh Figure every 1000ms
 plotcanvas = FigureCanvasTkAgg(fig, root)
 plotcanvas.get_tk_widget().pack(expand=True, fill=tkinter.BOTH)
 ani = animation.FuncAnimation(fig, animate, interval=1000, blit=False)
@@ -125,7 +118,7 @@ def save_csv():
                 # 3. Write the Header Row
                 writer.writerow(["Timestamp", "Temperature (C)", "Humidity (%)"])
 
-                for row in zip(xar, yar, yar2):
+                for row in zip(xar1, yar1, yar2):
                     writer.writerow(row)
 
             print(f"Data successfully saved to {file_path}")
