@@ -11,7 +11,11 @@ MQTT_CLIENT_NAME="Gruppe6_PiPub"
 MQTT_TOPIC="dht11/temp"
 
 # create an instance of the sensor class
-sensor = DHTSensor() 
+sensor = DHTSensor()
+
+# create an instance of the paho.mqtt client class. connect to MQTT
+client = mqtt_client.Client(mqtt_client.CallbackAPIVersion.VERSION1, MQTT_CLIENT_NAME)
+client.connect(MQTT_ADDRESS, MQTT_PORT)
 
 while True:
     # fetch Values
@@ -20,9 +24,7 @@ while True:
     timestamp = datetime.datetime.now().isoformat()
     text = f"{temp_value}_{humid_value}_{timestamp}"
 
-    # create an instance of the paho.mqtt client class
-    client = mqtt_client.Client(mqtt_client.CallbackAPIVersion.VERSION1,MQTT_CLIENT_NAME)
-    client.connect(MQTT_ADDRESS, MQTT_PORT) # connect to MQTT
+    # Publish Message
     client.publish(MQTT_TOPIC, text)        # send text to MQTT
 
     # wait 5 sec.
