@@ -97,7 +97,7 @@ class HanoiBase:
         if old_ring_index is None:
             return False
         
-        # find smallest ring on old-tower
+        # find smallest ring on new-tower
         for i in range(len(rings)):
             if rings[i] == new_tower:
                 new_ring_index = i # ring size (ring that sits on the target tower)
