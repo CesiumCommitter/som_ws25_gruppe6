@@ -1,4 +1,4 @@
-class hanoi:
+class HanoiBase:
     def __init__(self, ring_count):
         self.move_count = 0
         self.forbidden_move_count = 0

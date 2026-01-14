@@ -1,6 +1,7 @@
-from hanoi import hanoi
+from hanoi_base import HanoiBase
 
-class hanoi_human(hanoi):
+
+class HanoiHuman(HanoiBase):
 
     # define class to allow for human move input in command window
     def input_move(self):

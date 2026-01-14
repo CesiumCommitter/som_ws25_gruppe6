@@ -1,5 +1,5 @@
-from hanoi_human import hanoi_human
-from hanoiai import HanoiAi
+from hanoi_human import HanoiHuman
+from hanoi_ai import HanoiAi
 import matplotlib.pyplot as plt
 
 
@@ -25,7 +25,7 @@ while True:
         print("invalid! Number of rings must be >2!")
 
 if game_mode == 0:
-    game_instance = hanoi_human(num_rings)
+    game_instance = HanoiHuman(num_rings)
     game_instance.run()
 
 elif game_mode == 1:

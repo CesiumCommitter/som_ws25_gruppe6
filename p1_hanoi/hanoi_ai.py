@@ -1,9 +1,9 @@
-from hanoi import hanoi
+from hanoi_base import HanoiBase
 from SOMPiBrain import SOMPiBrain
 from itertools import product
 
 
-class HanoiAi(hanoi):
+class HanoiAi(HanoiBase):
 
     # Define subclass constructor
     def __init__(self, ring_count):
@@ -39,13 +39,20 @@ class HanoiAi(hanoi):
         move_code = move_space[brain_action]
         return move_code
 
-    # Method: Run games first with learning then without learning
+    # Method: Run games with and without learning
     def run(self, iterations_learning, iterations_playing):
-        history_iterations = []
+
+        # Define variables for final evaluation
+        history_iteration_ids = []
         history_moves_used = []
         history_forbidden_moves = []
+
+        # Begin learning iterations
         for j in range(0, iterations_learning):
+            # Reset state
             self.reset_state()
+
+            # While not won: Fetch move, convert move code, check lawfulness, move
             while not self.check_won():
                 brain_action = self.fetch_move()
                 move_code = self.map_brain_action_to_move_code(brain_action)
@@ -53,19 +60,27 @@ class HanoiAi(hanoi):
                 if self.check_move_legal(move_code):
                     self.move(move_code)
                     brain_state_new = self.map_state_to_brain_state(self.state)
+                    # Give small penalty for each move
                     self.brain.reward_action(brain_state_old, brain_state_new, brain_action, -1)
                 else:
+                    # Give big penalty for illegal move
                     self.brain.reward_action(brain_state_old, brain_state_old, brain_action, -10)
                     self.forbidden_move_count += 1
+            # Give major reward for winning
             self.brain.reward_action(brain_state_old, brain_state_new, brain_action, 10000)
-            history_iterations.append(j)
+
+            # Store game stats
+            history_iteration_ids.append(j)
             history_moves_used.append(self.move_count)
             history_forbidden_moves.append(self.forbidden_move_count)
 
-        # Loop For Playing without learning
+        # Begin non-learning iterations
         for k in range(0, iterations_playing):
+            # Reset state & set learning rate to 0
             self.reset_state()
             self.brain.epsilon = 0
+
+            # While not won: Fetch move, convert move code, check lawfulness, move
             while not self.check_won():
                 brain_action = self.fetch_move()
                 move_code = self.map_brain_action_to_move_code(brain_action)
@@ -73,13 +88,17 @@ class HanoiAi(hanoi):
                     self.move(move_code)
                 else:
                     self.forbidden_move_count += 1
-            history_iterations.append(iterations_learning + k)
+
+            # Store game stats
+            history_iteration_ids.append(iterations_learning + k)
             history_moves_used.append(self.move_count)
             history_forbidden_moves.append(self.forbidden_move_count)
 
-        # Loop For Last game (shown to window)
+        # Begin game with ASCII-Output
+        # Reset state & print ASCII
         self.reset_state()
         print(self.__str__())
+        # While not won: Fetch move, convert move code, check lawfulness, move, print ASCII
         while not self.check_won():
             brain_action = self.fetch_move()
             move_code = self.map_brain_action_to_move_code(brain_action)
@@ -90,4 +109,5 @@ class HanoiAi(hanoi):
                 print("Move not allowed!")
             print(self.__str__())
 
-        return history_iterations, history_moves_used, history_forbidden_moves
+        # Return evaluation metrics
+        return history_iteration_ids, history_moves_used, history_forbidden_moves
