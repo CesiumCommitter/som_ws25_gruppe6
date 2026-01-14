@@ -2,10 +2,12 @@ import time
 import board
 import adafruit_dht
 
+# define a class to work with the sensor
 class DHTSensor:
     def __init__(self):
         self.device = adafruit_dht.DHT11(board.D23)
 
+    # function to read the temperature
     def dht_read_temp(self):
         while True:
             try:
@@ -20,6 +22,7 @@ class DHTSensor:
                 raise error
             time.sleep(2.0)
 
+    # function to read the humidity
     def dht_read_humidity(self):
         while True:
             try:

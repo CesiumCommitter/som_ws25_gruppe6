@@ -1,6 +1,6 @@
 from hanoi_base import HanoiBase
 
-# define class to allow for human move input in command window
+# define class to play a game as a human
 class HanoiHuman(HanoiBase):
 
     # function to get human inputs
