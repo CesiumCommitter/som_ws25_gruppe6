@@ -7,28 +7,35 @@ class HanoiAi(hanoi):
 
     # Define subclass constructor
     def __init__(self, ring_count):
-        # define parent class constructor
+        # Define parent class constructor
         super().__init__(ring_count)
-        state_num = pow(3,ring_count)
+        # Define action-/statespace and instance brain
+        state_num = pow(3, ring_count)
         action_num = 6
         self.brain = SOMPiBrain(state_num, action_num)
 
+    # Method: Convert internal state depiction to rl-usable int
+    def map_state_to_brain_state(self, state):
+        # Create List of strings depicting state space [111, 112, ..., 333]
+        state_space_str = [''.join(str(turm) for turm in combination) for combination in product([1, 2, 3], repeat=self.ring_count)]
+        # Map list of state spaces [strings] to int() function and convert map back into list.
+        state_space = list(map(int, state_space_str))
+        # Fetch index position of the current internal state in the static RL-state-space. Return.
+        brain_state = state_space.index(state)
+        return brain_state
+
     # Method: Fetch next move from rl-model
     def fetch_move(self):
+        # Transform internal state to RL-state, fetch RL Model action & return
         brain_state = self.map_state_to_brain_state(self.state)
         move_code = self.brain.get_action(brain_state)
         return move_code
 
-    # Method: Convert internal state depiction to rl-usable int
-    def map_state_to_brain_state(self, state):
-        state_space_str = [''.join(str(turm) for turm in komb) for komb in product([1, 2, 3], repeat=self.ring_count)]
-        state_space = list(map(int, state_space_str))
-        brain_state = state_space.index(state)
-        return brain_state
-
     # Method: Convert action-num (returned by rl-model) from int to internal depiction
     def map_brain_action_to_move_code(self, brain_action):
+        # Define static internal move space
         move_space = [12, 13, 23, 21, 31, 32]
+        # Fetch internal move code by brain_action(=index)
         move_code = move_space[brain_action]
         return move_code
 
